@@ -5,8 +5,12 @@ import com.api.memotecabackend.dto.PensamentoDTOPost;
 import com.api.memotecabackend.model.Pensamento;
 import com.api.memotecabackend.repository.PensamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -16,33 +20,38 @@ public class PensamentoController {
     @Autowired
     private PensamentoRepository repository;
 
-    List<Pensamento> list = List.of();
-
-
 
     @GetMapping
-    public List<PensamentoDTO> getPensamento(){
-        return repository.findAll().stream().map(PensamentoDTO::new).toList();
+    public ResponseEntity<List<PensamentoDTO> >getPensamento(){
+        var pensamentos = repository.findAll().stream().map(PensamentoDTO::new).toList();
+        return ResponseEntity.ok(pensamentos);
     }
 
     @GetMapping("/{id}")
-    public PensamentoDTO getPensamentoById(@PathVariable Long id){
-        return new PensamentoDTO(repository.getReferenceById(id));
+    public ResponseEntity<PensamentoDTO> getPensamentoById(@PathVariable Long id){
+        var pensamento = new PensamentoDTO(repository.getReferenceById(id));
+        return ResponseEntity.ok(pensamento);
     }
 
     @PostMapping
-    public void postPensamento(@RequestBody PensamentoDTOPost pensamento ){
+    public ResponseEntity<PensamentoDTO> postPensamento(@RequestBody PensamentoDTOPost pensamento, UriComponentsBuilder uriComponentsBuilder){
         Pensamento pensamentoEntity = new Pensamento(pensamento);
         repository.save(pensamentoEntity);
+
+        URI uri = uriComponentsBuilder.path("api/pensamento/{id}").buildAndExpand(pensamentoEntity.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new PensamentoDTO(pensamentoEntity));
+
     }
 
     @DeleteMapping("/{id}")
-    public void deletePensamento(@PathVariable Long id){
+    public ResponseEntity<Void> deletePensamento(@PathVariable Long id){
        repository.deleteById(id);
+       return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public PensamentoDTO updatePensamento(@PathVariable Long id, @RequestBody PensamentoDTO dto){
+    public ResponseEntity<PensamentoDTO> updatePensamento(@PathVariable Long id, @RequestBody PensamentoDTO dto){
         var pensamento = repository.getReferenceById(id);
         pensamento.setConteudo(dto.conteudo());
         pensamento.setAutoria(dto.autoria());
@@ -50,7 +59,7 @@ public class PensamentoController {
 
         pensamento = repository.save(pensamento);
 
-        return new PensamentoDTO(pensamento);
+        return ResponseEntity.ok(new PensamentoDTO(pensamento));
 
     }
 
