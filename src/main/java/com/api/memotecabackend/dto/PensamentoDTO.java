@@ -11,5 +11,4 @@ public record PensamentoDTO(
     public PensamentoDTO(Pensamento pensamento){
         this(pensamento.getId(), pensamento.getConteudo(), pensamento.getAutoria(), pensamento.getModelo());
     }
-
 }

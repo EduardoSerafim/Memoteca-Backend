@@ -1,5 +1,6 @@
 package com.api.memotecabackend.model;
 
+import com.api.memotecabackend.dto.PensamentoDTO;
 import com.api.memotecabackend.dto.PensamentoDTOPost;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,6 @@ public class Pensamento {
         this.autoria = pensamento.autoria();
         this.modelo = pensamento.modelo();
     }
+
+
 }

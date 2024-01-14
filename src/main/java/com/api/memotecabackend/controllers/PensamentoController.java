@@ -41,6 +41,20 @@ public class PensamentoController {
        repository.deleteById(id);
     }
 
+    @PutMapping("/{id}")
+    public PensamentoDTO updatePensamento(@PathVariable Long id, @RequestBody PensamentoDTO dto){
+        var pensamento = repository.getReferenceById(id);
+        pensamento.setConteudo(dto.conteudo());
+        pensamento.setAutoria(dto.autoria());
+        pensamento.setModelo(dto.modelo());
+
+        pensamento = repository.save(pensamento);
+
+        return new PensamentoDTO(pensamento);
+
+    }
+
+
 
 
 }
