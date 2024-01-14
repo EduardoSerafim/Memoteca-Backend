@@ -36,6 +36,11 @@ public class PensamentoController {
         repository.save(pensamentoEntity);
     }
 
+    @DeleteMapping("/{id}")
+    public void deletePensamento(@PathVariable Long id){
+       repository.deleteById(id);
+    }
+
 
 
 }
