@@ -25,11 +25,17 @@ public class PensamentoController {
         return repository.findAll().stream().map(PensamentoDTO::new).toList();
     }
 
+    @GetMapping("/{id}")
+    public PensamentoDTO getPensamentoById(@PathVariable Long id){
+        return new PensamentoDTO(repository.getReferenceById(id));
+    }
 
     @PostMapping
     public void postPensamento(@RequestBody PensamentoDTOPost pensamento ){
         Pensamento pensamentoEntity = new Pensamento(pensamento);
         repository.save(pensamentoEntity);
     }
+
+
 
 }
