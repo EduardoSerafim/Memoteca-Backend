@@ -1,5 +1,6 @@
 package com.api.memotecabackend.controllers;
 
+import com.api.memotecabackend.dto.PensamentoDTO;
 import com.api.memotecabackend.dto.PensamentoDTOPost;
 import com.api.memotecabackend.model.Pensamento;
 import com.api.memotecabackend.repository.PensamentoRepository;
@@ -20,9 +21,10 @@ public class PensamentoController {
 
 
     @GetMapping
-    public List<Pensamento> getPensamento(){
-        return repository.findAll();
+    public List<PensamentoDTO> getPensamento(){
+        return repository.findAll().stream().map(PensamentoDTO::new).toList();
     }
+
 
     @PostMapping
     public void postPensamento(@RequestBody PensamentoDTOPost pensamento ){
